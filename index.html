@@ -566,8 +566,10 @@
       <h2>Vuoi essere tra i primi?</h2>
       <p class="form-desc">Lancio fine settembre 2026 — ti avvisiamo noi.</p>
       <!-- Sostituisci action con il tuo endpoint Formspree / Supabase / Airtable -->
-      <form id="signup-form" action="https://formspree.io/gabrielestaffa2003@gmail.com" method="POST">
+      <form id="signup-form" action="https://formsubmit.co/gabrielestaffa2003@gmail.com" method="POST">
         <input type="hidden" name="_subject" value="Nuova pre-iscrizione Raggio" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_next" value="https://staffagabrielee-lgtm.github.io/raggio/?success=1" />
         <div class="field">
           <label for="email">La tua email</label>
           <input type="email" id="email" name="email" placeholder="nome@email.com" required />
@@ -656,21 +658,14 @@ const rObs = new IntersectionObserver(entries => {
 }, { threshold:.08, rootMargin:'0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => rObs.observe(el));
 
-// ── Form ──
-const form = document.getElementById('signup-form');
-const btn  = document.getElementById('submit-btn');
+// ── Form — mostra successo se redirect con ?success=1 ──
 const body = document.getElementById('form-body');
 const succ = document.getElementById('success');
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  btn.textContent = 'Un secondo…';
-  btn.disabled = true;
-  try {
-    const res = await fetch(form.action, { method:'POST', body: new FormData(form), headers:{ Accept:'application/json' } });
-    if (res.ok) { body.style.display='none'; succ.style.display='block'; }
-    else { btn.textContent = 'Qualcosa è andato storto — riprova'; btn.disabled = false; }
-  } catch { btn.textContent = 'Connessione persa — riprova'; btn.disabled = false; }
-});
+if (new URLSearchParams(window.location.search).get('success') === '1') {
+  body.style.display = 'none';
+  succ.style.display = 'block';
+  document.getElementById('form').scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
